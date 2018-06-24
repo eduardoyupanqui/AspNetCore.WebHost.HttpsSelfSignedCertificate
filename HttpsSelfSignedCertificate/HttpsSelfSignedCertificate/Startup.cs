@@ -31,7 +31,20 @@ namespace HttpsSelfSignedCertificate
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc(options =>
+            {
+                options.SslPort = 44321;
+                options.Filters.Add(new RequireHttpsAttribute());
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddAntiforgery(options =>
+            {
+                options.Cookie.Name = "_af";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.HeaderName = "X-XSRF-TOKEN";
+            }
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
