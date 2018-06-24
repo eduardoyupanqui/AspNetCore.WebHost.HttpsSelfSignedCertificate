@@ -39,6 +39,12 @@ namespace HttpsSelfSignedCertificate
                 .UseKestrel(options =>
                 {
                     options.AddServerHeader = false;
+                    // Configure the Url and ports to bind to
+                    // This overrides calls to UseUrls and the ASPNETCORE_URLS environment variable, but will be 
+                    // overridden if you call UseIisIntegration() and host behind IIS/IIS Express
+                    //http://localhost:5001 - An unsecured end point
+                    //https://localhost:44321 - Secured using our SSL cert
+                    options.Listen(IPAddress.Loopback, 5001);
                     options.Listen(IPAddress.Loopback, 44321, listenOptions =>
                     {
                         listenOptions.UseHttps(certificate);
